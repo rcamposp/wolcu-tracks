@@ -13,5 +13,12 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require_tree .
+//= require angular
+//= require tether
 //= require bootstrap
+
+//= require tracks.js
+
+
+
+//= require_tree .

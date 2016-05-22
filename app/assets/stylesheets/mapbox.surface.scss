@@ -1,0 +1,33 @@
+.leaflet-surface-chart .axis path, .axis line {
+    fill: none;
+    stroke: #999;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+.leaflet-surface-chart text {
+    fill: #747474;
+}
+.leaflet-surface-chart .hover-text {
+    fill: #333;
+}
+.leaflet-surface-chart .hover-line {
+    stroke: #999;
+    stroke-width: 1px;
+}
+.leaflet-surface-chart .tick line {
+    stroke: #DADADA;
+}
+.leaflet-surface-chart .line {
+    fill: none;
+    stroke: #3887be;
+    stroke-width: 2px;
+}
+.leaflet-surface-chart .area {
+    fill: #3887be;
+    fill-opacity: .3;
+    stroke: none;
+}
+.leaflet-surface-chart .overlay {
+    fill: none;
+    pointer-events: all;
+}
