@@ -8,8 +8,9 @@ surfaceAPIResponses.attribution = "<a href='https://www.mapbox.com/about/maps/' 
 
 var app = angular.module('tracks', []);
 
-app.controller('TracksCtrl', function($scope) {
+app.controller('TracksCtrl', function($scope) { 
   $scope.loading = false;
+  $scope.markers = [];
 
   L.mapbox.accessToken = 'pk.eyJ1IjoiYm9iYnlzdWQiLCJhIjoiZlY0VElqTSJ9.gGJetUgdQKj64oeS5j9kzQ'
   map  = L.mapbox.map('map', 'bobbysud.iia43k9m')
@@ -91,9 +92,61 @@ app.controller('TracksCtrl', function($scope) {
             .bindPopup("Hydration point 1 " + response.results[0].ele)
             .addTo(map);
     });
+    $scope.drawMarkers()
 
   }
 
+  //All the markers store in map._layers (map._layers[68]._shadow.className)
+  $scope.drawMarkers = function(){
+    var featureGroup = L.featureGroup().addTo(map);
+    // Define polyline options
+    // http://leafletjs.com/reference.html#polyline
+    var polyline_options = {
+        color: '#000'
+    };
+
+    var drawControl = new L.Control.Draw({
+      edit: {
+          featureGroup: featureGroup,
+          edit: true
+      },
+      draw: {
+          polyline: false,
+          circle: false,
+          polygon: false,
+          rectangle: false,        
+      }
+    }).addTo(map);
+
+    //Do something after creating a marker
+    map.on('draw:created', function(e) {
+        featureGroup.addLayer(e.layer);
+        console.log(e)
+        var data = e.layer._latlng;
+        if (data) {
+          console.log(data)
+          //allData.push([data.lat, data.lng]);
+        }
+    });  
+  }
+
+  $scope.saveTrack = function(event){
+    event.preventDefault();
+    console.log(map._layers);
+    for (var key in map._layers) {
+      if (map._layers.hasOwnProperty(key) && map._layers[key].hasOwnProperty("_icon")) {        
+          if(angular.element(map._layers[key]._icon).hasClass('leaflet-marker-icon')){
+            console.log("This layers are the markers!!!");
+            //Store the data somewhere for form submition
+          }
+      }
+    }
+    for(i=0;i<map._layers.length; i++){
+      console.log(map._layers[i]._shadow)
+    }
+    return false;
+
+  }
 });
 
 

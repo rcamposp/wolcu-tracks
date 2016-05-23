@@ -1,0 +1,41 @@
+<% if @track.errors.any? %>
+  <div id="error_explanation">
+    <p>Error(s) ocurred:</p>
+ 
+    <ul>
+    <% @track.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div ng-controller="TracksCtrl">
+<%= form_for @track do |f| %>	
+	<div class="col-xs-6">
+		<fieldset class="form-group">
+			<%= f.label :name, 'Name' %>:
+			<%= f.text_field :name, placeholder: "Name", class: "form-control" %>
+		</fieldset>
+
+		<fieldset class="form-group">
+			<%= f.label :description, 'Description' %>:
+			<%= f.text_field :description, placeholder: "Description", class:"form-control" %>			
+		</fieldset>
+	</div>
+
+	<div class="col-xs-6">
+		<fieldset class="form-group">
+			<%= f.label :gpx, 'GPX' %>:
+			<%= f.file_field :gpx, 'file-reader': "fileContent" %>
+			<small class="text-muted">File max size: 2 MB.</small>
+		    <i ng-show="fileContent == true	" class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+			<span class="sr-only">Loading...</span>		
+		</fieldset>
+	</div>
+	<div class="col-xs-12">
+		<div id='map'></div>
+	</div>			
+	<%= f.submit "Save", 'ng-click': 'saveTrack($event)' %>
+<% end %>
+</div>

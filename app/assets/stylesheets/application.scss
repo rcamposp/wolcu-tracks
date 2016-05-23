@@ -19,4 +19,8 @@
  @import "mapbox.surface";
  @import "tracks";
 
-
+.field_with_errors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
