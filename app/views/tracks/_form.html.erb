@@ -10,32 +10,56 @@
   </div>
 <% end %>
 
-<div ng-controller="TracksCtrl">
-<%= form_for @track do |f| %>	
+<div ng-controller="TracksCtrl" ng-init="init('<%= @track.to_json %>', '<%= @track.marker.to_json %>')">
+
+<%= form_for @track , :html => { "ng-submit" => "saveTrack($event)"} do |track_form| %>	
 	<div class="col-xs-6">
 		<fieldset class="form-group">
-			<%= f.label :name, 'Name' %>:
-			<%= f.text_field :name, placeholder: "Name", class: "form-control" %>
+			<%= track_form.label :name, 'Name' %>:
+			<%= track_form.text_field :name, value: "{{track.name}}", placeholder: "Name", class: "form-control" %>
 		</fieldset>
 
 		<fieldset class="form-group">
-			<%= f.label :description, 'Description' %>:
-			<%= f.text_field :description, placeholder: "Description", class:"form-control" %>			
+			<%= track_form.label :description, 'Description' %>:
+			<%= track_form.text_field :description, value: "{{track.description}}", placeholder: "Description", class:"form-control" %>			
 		</fieldset>
 	</div>
 
 	<div class="col-xs-6">
 		<fieldset class="form-group">
-			<%= f.label :gpx, 'GPX' %>:
-			<%= f.file_field :gpx, 'file-reader': "fileContent" %>
-			<small class="text-muted">File max size: 2 MB.</small>
-		    <i ng-show="fileContent == true	" class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-			<span class="sr-only">Loading...</span>		
+			<% if @track.gpx == nil %>				
+				<%= track_form.label :gpx, 'GPX' %>:
+				<%= track_form.file_field :gpx, 'file-reader': "fileContent" %>
+				<small class="text-muted">File max size: 2 MB.</small>			    
+			<% else %>
+				<i class="fa fa-file-code-o" aria-hidden="true"></i>
+				<span>{{track.gpx}}</span>
+				<%= track_form.hidden_field :gpx, value: "{{track.gpx}}" %>	
+			<% end %>
 		</fieldset>
 	</div>
+	<div id="markers">	
+		{{track.markers}}
+		<% marker = @track.marker.first %>		
+		<div ng-repeat="marker in track.markers" class="marker">
+			<%= track_form.fields_for "markers[]", marker do |track_markers| %>						    
+				<%= track_markers.hidden_field :lon, value: "{{marker.lon}}" , placeholder: "Lon", class: "form-control" %>		
+				<%= track_markers.hidden_field :lat, value: "{{marker.lat}}", placeholder: "Lat", class: "form-control" %>		
+				<%= track_markers.hidden_field :title, value: "{{marker.title}}", placeholder: "Title", class: "form-control" %>		
+				<%= track_markers.hidden_field :description, value: "{{marker.description}}", placeholder: "Description", class: "form-control" %>
+			<% end %>
+		</div>		
+  	</div>
+
 	<div class="col-xs-12">
+
+		<div ng-show="loading" id="loading" class="container">
+
+			<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+			<span class="sr-only">Loading...</span>					
+		</div>
 		<div id='map'></div>
 	</div>			
-	<%= f.submit "Save", 'ng-click': 'saveTrack($event)' %>
+	<%= track_form.submit "Save" %>
 <% end %>
 </div>

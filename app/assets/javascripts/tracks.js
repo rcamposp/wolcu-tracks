@@ -1,3 +1,4 @@
+var d3 = require('d3')
 require('mapbox.js')
 require('mapbox-surface.js')
 
@@ -8,14 +9,28 @@ surfaceAPIResponses.attribution = "<a href='https://www.mapbox.com/about/maps/' 
 
 var app = angular.module('tracks', []);
 
-app.controller('TracksCtrl', function($scope) { 
+app.controller('TracksCtrl', ['$scope', '$http', function($scope, $http) { 
+  
   $scope.loading = false;
-  $scope.markers = [];
+  $scope.track = {markers:[]}
+  $scope.track.markers.push({lon:"",lat:"",title:"",description:""})    
 
   L.mapbox.accessToken = 'pk.eyJ1IjoiYm9iYnlzdWQiLCJhIjoiZlY0VElqTSJ9.gGJetUgdQKj64oeS5j9kzQ'
   map  = L.mapbox.map('map', 'bobbysud.iia43k9m')
 
+  $scope.init = function(track_data, markers_data){        
+    $scope.track = angular.fromJson(track_data)    
+    console.log(markers_data)
+    $scope.track.markers = angular.fromJson(markers_data)  
+    if($scope.track.gpx != null){         
+      d3.text('uploads/'+$scope.track.gpx, function(str) {        
+        $scope.loadTrack(str);
+      })
+    }
+  }
+
   $scope.loadTrack = function(data){
+    $scope.loading = true;
     var dom = (new DOMParser()).parseFromString(data, 'text/xml');    
     var gpx2geojson = require('togeojson').gpx;
     var geojson = gpx2geojson(dom)
@@ -57,7 +72,7 @@ app.controller('TracksCtrl', function($scope) {
             //If im still missing some queries, call the function again recursively.
             if(i<parts){partialDataCall(parts,i+1)}
             //Else, Im done quering the surface API and now I can graph the data =D
-            else{                                
+            else{                                             
                 var elevationChart = L.mapbox.surface.chart({
                     position: 'topright',
                     chartType: 'area',
@@ -71,7 +86,10 @@ app.controller('TracksCtrl', function($scope) {
                     chart: elevationChart,
                     color: 'orange',
                     weight: 2
-                }, surfaceAPIResponses.results).addTo(map);                                                    
+                }, surfaceAPIResponses.results).addTo(map);    
+                $scope.$apply(function(){
+                  $scope.loading = false;
+                });                                            
                 return 1
             }
         });        
@@ -80,20 +98,24 @@ app.controller('TracksCtrl', function($scope) {
     //Init the counter and in how many parts the data will be splited to be able to make the API calls
     i=0
     parts = parseInt(data.length/299)
-    partialData(parts,i=0)
+    partialData(parts,i=0)    
+    console.log($scope.track.markers)
+    for(index=0;index<$scope.track.markers.length;index++){
+      var marker = [[parseFloat($scope.track.markers[index].lat),parseFloat($scope.track.markers[index].lon)]]      
+      console.log(marker)
+      if(marker[0][0] != null && marker[0][1] != null){        
+        surface.getData(surfaceOptions, marker, function(error, response) {
+            if (error) throw new Error(error);
+            console.log(response)
+            L.marker(response.results[0].latlng)
+                .bindPopup("Hydration point 1 " + response.results[0].ele)
+                .addTo(map);
+        });        
+      }      
+    }
 
-    // Now lets create some markers ;)
-
-    var hydrationPoint1 = [[-33.3613950, -70.5985090]];
-    var hydrationPoint2 = [[-33.385845, -70.60188]];
-    surface.getData(surfaceOptions, hydrationPoint1, function(error, response) {
-        if (error) throw new Error(error);
-        L.marker(response.results[0].latlng)
-            .bindPopup("Hydration point 1 " + response.results[0].ele)
-            .addTo(map);
-    });
+    //Show controls to pin markers on map
     $scope.drawMarkers()
-
   }
 
   //All the markers store in map._layers (map._layers[68]._shadow.className)
@@ -131,23 +153,22 @@ app.controller('TracksCtrl', function($scope) {
   }
 
   $scope.saveTrack = function(event){
-    event.preventDefault();
-    console.log(map._layers);
+    $scope.track.markers = []
     for (var key in map._layers) {
       if (map._layers.hasOwnProperty(key) && map._layers[key].hasOwnProperty("_icon")) {        
-          if(angular.element(map._layers[key]._icon).hasClass('leaflet-marker-icon')){
-            console.log("This layers are the markers!!!");
-            //Store the data somewhere for form submition
+          if(angular.element(map._layers[key]._icon).hasClass('leaflet-marker-icon')){              
+            $scope.track.markers.push({lon:map._layers[key]._latlng.lng,lat:map._layers[key]._latlng.lat,title:"",description:""})                        
           }
       }
     }
     for(i=0;i<map._layers.length; i++){
       console.log(map._layers[i]._shadow)
     }
-    return false;
+    //event.preventDefault();
+    return true;
 
   }
-});
+}]);
 
 
 
