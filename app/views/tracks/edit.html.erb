@@ -1,9 +1,9 @@
 <div class="row">
-	<div class="col-xs-offset-10 col-xs-2" style="text-align: right">
-		<%= link_to raw("<i class='fa fa-save'></i>"), {:action => :update}, :class => "btn-sm btn btn-primary" %>
+	<div class="col-xs-offset-10 col-xs-2" style="text-align: right">		
 		<%= link_to raw("<i class='fa fa-reply'></i>"), {:action => :index}, :class => "btn-sm btn btn-secondary active" %>
 	</div>
+	<h2>Edit Track</h2>
 </div>
-<h2>Ruta carbon cerro san cristobal</h2>
-<div class="row">
+<div class="row" ng-app="tracks">	
+	<%= render 'form', object: @track %>		
 </div>

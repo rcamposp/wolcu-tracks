@@ -18,18 +18,18 @@ app.controller('TracksCtrl', ['$scope', '$http', function($scope, $http) {
   L.mapbox.accessToken = 'pk.eyJ1IjoiYm9iYnlzdWQiLCJhIjoiZlY0VElqTSJ9.gGJetUgdQKj64oeS5j9kzQ'
   map  = L.mapbox.map('map', 'bobbysud.iia43k9m')
 
-  $scope.init = function(track_data, markers_data){        
+  $scope.init = function(track_data, markers_data, showMarkersControls){        
     $scope.track = angular.fromJson(track_data)    
     console.log(markers_data)
     $scope.track.markers = angular.fromJson(markers_data)  
     if($scope.track.gpx != null){         
-      d3.text('uploads/'+$scope.track.gpx, function(str) {        
-        $scope.loadTrack(str);
+      d3.text('/uploads/'+$scope.track.gpx, function(str) {        
+        $scope.loadTrack(str, showMarkersControls);
       })
     }
   }
 
-  $scope.loadTrack = function(data){
+  $scope.loadTrack = function(data, showMarkersControls){
     $scope.loading = true;
     var dom = (new DOMParser()).parseFromString(data, 'text/xml');    
     var gpx2geojson = require('togeojson').gpx;
@@ -113,9 +113,11 @@ app.controller('TracksCtrl', ['$scope', '$http', function($scope, $http) {
         });        
       }      
     }
-
+    
     //Show controls to pin markers on map
-    $scope.drawMarkers()
+    if(showMarkersControls){
+      $scope.drawMarkers()
+    }
   }
 
   //All the markers store in map._layers (map._layers[68]._shadow.className)
@@ -189,7 +191,7 @@ app.directive('fileReader', function() {
               var contents = e.target.result;
               scope.$apply(function () {
                 scope.fileReader = contents;
-                scope.$parent.loadTrack(contents)
+                scope.$parent.loadTrack(contents,true)
               });
           };
           

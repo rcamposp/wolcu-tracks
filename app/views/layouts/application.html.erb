@@ -4,23 +4,24 @@
   <meta charset=utf-8 />
   <meta name='viewport' content='width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1'>
   <title>WolcuTracks</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag    'application', media: 'all' %>
+  <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
   <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.css' rel='stylesheet' />
 	<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.js'></script>
 </head>
-<body>
+<body class="<%= controller_name %>">
 <header>
 	<div class="container">
 		<div class="row">
-			<div class="col-md-2">
-				<img src="/assets/logo.png">
-			</div>
-			<div class="col-md-10">
-				<ul>
-					
-				</ul>
+			<div class="col-md-12">				
+				<div id="menu">
+					<div id="logo">
+						<a href="/"><img src="/assets/logo.png"></a>
+					</div>
+					<div class="menu-item"><a href="/tracks">My tracks</a></div>
+					<div class="menu-item">About</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -30,6 +31,12 @@
 	<%= yield %>
 </main>
 
-<footer></footer>
+<footer>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12"><p>Ricardo Campos 2016 - ricardocamposp@gmail.com</p></div>
+		</div>
+	</div>
+</footer>
 </body>
 </html>

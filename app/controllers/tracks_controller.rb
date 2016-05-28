@@ -39,14 +39,29 @@ class TracksController < ApplicationController
   end
 
   def show
+    @track = Track.find(params[:id])
   end
 
   def edit
+    @track = Track.find(params[:id])
   end
 
   def update
+    @track = Track.find params[:id]    
+
+    if @track.update_attributes(track_params)
+      flash[:notice] = 'The Track was successfully updated!'
+      redirect_to({:action => :show}, {:notice => 'Track was deleted'})
+    end
   end
 
-  def destroy
+  def destroy    
+    Track.find(params[:id]).destroy    
+    redirect_to({:action => :index}, {:notice => 'Track was deleted'})
+  end
+
+  def track_params
+    params.require(:track).permit(:name, :description, :gpx, :marker)
   end
 end
+

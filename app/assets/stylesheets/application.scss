@@ -18,9 +18,53 @@
  @import "mapbox";
  @import "mapbox.surface";
  @import "tracks";
+ @import "welcome";
 
-.field_with_errors {
-  padding: 2px;
-  background-color: red;
+#error_explanation{
+    border: solid 1px red;
+    padding: 10px;
+    background: #FFB0B0;
+}
+
+.field_with_errors input{  
+  border: solid 1px red;
   display: table;
+}
+
+header{
+	background: #222;	
+	#logo img{
+		height: 70px;
+	}
+
+	#menu{
+		display: flex;
+		justify-content: flex-start;
+		height: 70px;
+		align-items: center;		
+		div.menu-item{
+			width: 100px;
+			text-align: center;
+			margin-left: 10px;				
+			padding: 5px 10px;
+			font-weight: bold;
+			&,a{
+				color: #fff;
+			}
+		}
+	}
+}
+
+body.track, body.tracks{
+	main{
+		margin-top: 20px;	
+	    min-height: 550px;
+	}
+}
+
+footer{
+	margin-top: 20px;
+	background: #222;
+	color: #fff;
+	text-align: center;
 }

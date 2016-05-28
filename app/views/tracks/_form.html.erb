@@ -1,5 +1,5 @@
 <% if @track.errors.any? %>
-  <div id="error_explanation">
+  <div class="col-md-12" id="error_explanation">
     <p>Error(s) ocurred:</p>
  
     <ul>
@@ -10,17 +10,17 @@
   </div>
 <% end %>
 
-<div ng-controller="TracksCtrl" ng-init="init('<%= @track.to_json %>', '<%= @track.marker.to_json %>')">
+<div ng-controller="TracksCtrl" ng-init="init('<%= @track.to_json %>', '<%= @track.marker.to_json %>', true)">
 
 <%= form_for @track , :html => { "ng-submit" => "saveTrack($event)"} do |track_form| %>	
 	<div class="col-xs-6">
 		<fieldset class="form-group">
-			<%= track_form.label :name, 'Name' %>:
+			<%= track_form.label :name, 'Name:' %>
 			<%= track_form.text_field :name, value: "{{track.name}}", placeholder: "Name", class: "form-control" %>
 		</fieldset>
 
 		<fieldset class="form-group">
-			<%= track_form.label :description, 'Description' %>:
+			<%= track_form.label :description, 'Description:' %>
 			<%= track_form.text_field :description, value: "{{track.description}}", placeholder: "Description", class:"form-control" %>			
 		</fieldset>
 	</div>
@@ -28,8 +28,8 @@
 	<div class="col-xs-6">
 		<fieldset class="form-group">
 			<% if @track.gpx == nil %>				
-				<%= track_form.label :gpx, 'GPX' %>:
-				<%= track_form.file_field :gpx, 'file-reader': "fileContent" %>
+				<%= track_form.label :gpx, 'GPX:' %>
+				<%= track_form.file_field :gpx, 'file-reader': "fileContent", class: 'form-control' %>
 				<small class="text-muted">File max size: 2 MB.</small>			    
 			<% else %>
 				<i class="fa fa-file-code-o" aria-hidden="true"></i>
@@ -37,9 +37,11 @@
 				<%= track_form.hidden_field :gpx, value: "{{track.gpx}}" %>	
 			<% end %>
 		</fieldset>
+		<%= button_tag( :class => "btn btn-primary") do %>
+		  <i class="fa fa-save"></i> Save
+		<% end %>	
 	</div>
-	<div id="markers">	
-		{{track.markers}}
+	<div id="markers">			
 		<% marker = @track.marker.first %>		
 		<div ng-repeat="marker in track.markers" class="marker">
 			<%= track_form.fields_for "markers[]", marker do |track_markers| %>						    
@@ -51,15 +53,13 @@
 		</div>		
   	</div>
 
-	<div class="col-xs-12">
+	<div id="map-container" class="col-xs-12">
 
 		<div ng-show="loading" id="loading" class="container">
-
 			<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
 			<span class="sr-only">Loading...</span>					
 		</div>
-		<div id='map'></div>
+		<div id='map'></div>		
 	</div>			
-	<%= track_form.submit "Save" %>
 <% end %>
 </div>

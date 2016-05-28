@@ -1,2 +1,25 @@
-<h1>Tracks#show</h1>
-<p>Find me in app/views/tracks/show.html.erb</p>
+<div class="row" ng-app="tracks">
+<div ng-controller="TracksCtrl" ng-init="init('<%= @track.to_json %>', '<%= @track.marker.to_json %>', false)">
+
+	<div class="row">
+		<div class="col-xs-offset-10 col-xs-2" style="text-align: right">		
+			<%= link_to raw("<i class='fa fa-reply'></i>"), {:action => :index}, :class => "btn-sm btn btn-secondary active" %>
+		</div>		
+		<div class="col-xs-12">
+			<h2><%= @track.name %></h2>
+			<pre><%= @track.description %></pre>
+		</div>
+	</div>
+	<div class="row">
+		<div id="map-container" class="col-xs-12">
+			<div ng-show="loading" id="loading" class="container">
+
+				<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+				<span class="sr-only">Loading...</span>					
+			</div>
+			<div id='map'></div>			
+		</div>			
+	</div>
+	
+</div>
+</div>
