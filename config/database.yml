@@ -51,4 +51,8 @@ production:
   <<: *default
   database: wolcutracks_production
   username: wolcutracks
-  password: <%= ENV['WOLCU_DATABASE_PASSWORD'] %>
+  password: jhpj6vqz
+  adapter: mysql2
+  encoding: utf8
+  pool: 5  
+  socket: /var/run/mysqld/mysqld.sock
