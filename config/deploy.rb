@@ -73,13 +73,7 @@ namespace :deploy do
     end
   end
 
-  desc "Install node modules non-globally"
-  task :npm_install do
-    run "cd #{current_path} && npm install"
-  end
-
   before :starting,     :check_revision  
-  after  :finishing,    :npm_install
   after  :finishing,    :compile_assets
   after  :finishing,    :cleanup
   after  :finishing,    :restart
