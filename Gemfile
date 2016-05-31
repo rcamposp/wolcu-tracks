@@ -1,8 +1,9 @@
 source 'https://rubygems.org'
 
-
+gem "browserify-rails"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
+
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.3.13', '< 0.5'
 # Use SCSS for stylesheets
@@ -27,7 +28,7 @@ gem 'rails-assets-tether', '>= 1.1.0'
 gem 'bootstrap', '~> 4.0.0.alpha3'
 gem 'font-awesome-sass', '~> 4.6.2'
 gem 'angularjs-rails', '~> 1.5', '>= 1.5.5'
-gem "browserify-rails"
+
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
